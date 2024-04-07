@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourly - Travel Agency</title>
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body id="top">
+    <header class="header" data-header>
+        <div class="overlay" data-overlay></div>
+        <div class="header-bottom">
+            <div class="container">
+                <nav class="navbar" data-navbar>
+                    <div class="navbar-top">
+                        <button class="nav-close-btn" aria-label="Close Menu" data-nav-close-btn>
+                            <ion-icon name="close-outline"></ion-icon>
+                        </button>
+                    </div>
+                    <ul class="navbar-list">
+                        <li>
+                            <a href="/index?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.home %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/tours?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.allTours %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/myTours?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.myTours %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/news?lang=<%= currentLanguage %>"  class="navbar-link" data-nav-link>
+                                <%= translation.firstapi %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/airports?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.secondapi %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout" class="navbar-link" data-nav-link>
+                                <%= translation.logout %>
+                            </a>
+                        </li>
+                        <% if (isAdmin) { %>
+                            <li>
+                                <a class="navbar-link" href="/admin?lang=<%= currentLanguage %>">
+                                    <%= translation.isAdmin %>
+                                </a>
+                            </li>
+                        <% } %>
+                    </ul>
+                </nav>
+                <form id="language-form" action="/change-language" method="POST" class="btn-group">
+                    <select name="language" onchange="document.getElementById('language-form').submit()"
+                        class="btn btn-primary dropdown-toggle">
+                        <option value="en" <% if(currentLanguage==='en' ) { %> selected <% } %>>En</option>
+                        <option value="ru" <% if(currentLanguage==='ru' ) { %> selected <% } %>>Ru</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="hero" id="home">
+            <section class="tour-details">
+                <div class="container tour">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    <% tour.images.forEach((image, index) => { %>
+                                        <div class="carousel-item <% if (index === 0) { %>active<% } %>">
+                                            <img src="<%= image %>" class="d-block w-100" alt="Tour Image">
+                                        </div>
+                                    <% }); %>
+                                </div>
+                                <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
+                                    data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleControls" role="button"
+                                    data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <% if (currentLanguage === 'en') { %>
+                                <h3 class="h3 card-title">
+                                    <%= tour.names[0].name %>
+                                </h3>
+                                <p class="card-text">
+                                    <%= tour.descriptions[0].description %>
+                                </p>
+                            <% } else if (currentLanguage === 'ru') { %>
+                                <h3 class="h3 card-title">
+                                    <%= tour.names[1].name %>
+                                </h3>
+                                <p class="card-text">
+                                    <%= tour.descriptions[1].description %>
+                                </p> <% } %>
+                            <ul class="tour-info-list">
+                                <li><strong><%= translation.price %>:</strong> $<%= tour.price %></li>
+                                <li><strong><%= translation.duration %>:</strong> <%= tour.duration %> <%= translation.hours %></li>
+                                <li><strong><%= translation.location %>:</strong> <%= tour.location %></li>
+                                <li><strong><%= translation.startDate %>:</strong> <%= tour.startDate.toDateString() %></li>
+                                <li><strong><%= translation.endDate %>:</strong> <%= tour.endDate.toDateString() %></li>
+                                <li><strong><%= translation.maxParticipants %>:</strong> <%= tour.maxParticipants %></li>
+                            </ul>
+                            <a href="/tours/<%= tour._id %>/book" class="btn btn-primary"><%= translation.Booknow %></a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+        
+    </main>
+    <footer class="footer">
+        <div class="footer-bottom">
+            <div class="container">
+
+                <p class="copyright">
+                    Zhunisbek Zangar / SE-2207
+                </p>
+            </div>
+        </div>
+    </footer>
+    <a href="#top" class="go-top" data-go-top>
+        <ion-icon name="chevron-up-outline"></ion-icon>
+    </a>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="./assets/js/script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+       body {
+            background-image: url("../images/hero-banner.jpg");;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    
+        .container {
+            background-color: #ffffffda;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center; 
+            width: 80%; 
+            margin-left: auto; 
+            margin-right: auto;
+        }
+    
+        h1 {
+            color: #333;
+        }
+    
+        .result-container {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        button[type="submit"] {
+            background-color: #333;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 15px; 
+        }
+    
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
+    
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-bottom: 2px solid #aaa;
+            background-color: transparent;
+            transition: border-bottom-color 0.3s ease;
+        }
+        span.admin {
+            color: red;
+            font-weight: bold;
+        }
+        span.user {
+            color: green;
+            font-weight: bold;
+        }
+       
+        select[name="language"] {
+        width: auto;
+        padding: 5px 10px;
+        border: 1px solid #4c64cd;
+        border-radius: 5px;
+        background-color: #4c64cd;
+        color: #333;
+        font-size: 16px;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+    select[name="language"] {
+        padding: 10px 15px;
+        border: 1px solid #4c64cd;
+        border-radius: 5px;
+        background-color: #4c64cd;
+        color: #ffffff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+    
+    select[name="language"]:focus {
+        border-color: #ffffff;
+    }
+
+.navbar-nav li.form-inline {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav li.form-inline select[name="language"] {
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .navbar-nav li.form-inline {
+        flex-direction: column;
+    }
+    
+    .navbar-nav li.form-inline select[name="language"] {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+h2 {
+    font-family: Arial, sans-serif;
+}
+
+    </style>
+    
+    </style>
+</head>
+
+<body>
+    <section class="header">
+        <div class="header-main bg-light-pink"> 
+            <div class="container">
+                <div class="col-md-auto">
+                    <nav class="navbar navbar-expand-lg navbar-light w-100" id="header-navbar">
+                        <a class="navbar-brand font-weight-bold" href="/index?lang=<%= currentLanguage %>"><%= translation.home %></a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    
+                                    <a class="navbar-brand font-weight" href="/admin?lang=<%= currentLanguage %>"><%= transition.users %></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="navbar-brand font-weight " href="/admin/tours?lang=<%= currentLanguage %>"><%= transition.tours %></a>
+                                </li>
+                                
+                                <li class="nav-item dropdown">
+                                    <form id="language-form" action="/change-language" method="POST">
+                                        <select name="language" onchange="this.form.submit()"> <
+                                            <option value="en" <% if(currentLanguage === 'en') { %> selected <% } %>>En</option>
+                                            <option value="ru" <% if(currentLanguage === 'ru') { %> selected <% } %>>Ru</option>
+                                        </select>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mt-4">
+        <h2><%= transition.admin %></h2>
+        <h3><%= transition.AddUser %></h3>
+        <form action="/admin/add?lang=<%= currentLanguage %>" method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-3">
+                    <label for="username"><%= transition.username %></label>
+                    <input type="text" class="form-control" id="username" name="username">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="email"><%= transition.email %></label>
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="password"><%= transition.password %></label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+                <div class="form-group col-md-3">
+                    <button type="submit" class="btn btn-primary btn-block mt-3"><%= transition.AddUser %></button>
+                </div>
+            </div>
+        </form>
+        
+        
+        <h3><%= transition.UpdateUser %></h3>
+        <form action="/admin/update" method="POST">
+            <div class="form-group">
+                <label for="userId"><%= transition.SelectUser %></label>
+                <select class="form-control" id="userId" name="userId">
+                    <% users.forEach(user => { %>
+                    <option value="<%= user._id %>"><%= user.username %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="newUsername"><%= transition.username %></label>
+                    <input type="text" class="form-control" id="newUsername" name="newUsername">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="newEmail"><%= transition.email %></label>
+                    <input type="email" class="form-control" id="newEmail" name="newEmail">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="newPassword"><%= transition.password %></label>
+                <input type="password" class="form-control" id="newPassword" name="newPassword">
+            </div>
+            <button type="submit" class="btn btn-primary"><%= transition.UpdateUser %></button>
+        </form>
+
+        <br>
+        <h3><%= transition.DeleteUser %></h3>
+        <form action="/admin/delete?lang=<%= currentLanguage %>" method="POST">
+            <div class="form-group">
+                <label for="deleteUserId"><%= transition.SelectUser  %></label>
+                <select class="form-control" id="deleteUserId" name="deleteUserId">
+                    <% users.forEach(user => { %>
+                    <option value="<%= user._id %>"><%= user.username %></option>
+                    <% }); %>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-danger btn-block"><%= transition.DeleteUser %></button>
+        </form>
+    </div>
+
+    
+    <footer class="footer">
+        <div class="footer-bottom">
+            <div class="container">
+
+                <p class="copyright">
+                    Zhunisbek Zangar / SE-2207
+                </p>
+            </div>
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

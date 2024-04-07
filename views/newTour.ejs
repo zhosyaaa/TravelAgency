@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Tours</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-image: url("../images/hero-banner.jpg");;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+    
+        .container {
+            background-color: #ffffffda;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center; 
+            width: 80%; 
+            margin-left: auto; 
+            margin-right: auto;
+        }
+    
+        h1 {
+            color: #333;
+        }
+    
+        .result-container {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        button[type="submit"] {
+            background-color: #333;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 15px; 
+        }
+    
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
+    
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-bottom: 2px solid #aaa;
+            background-color: transparent;
+            transition: border-bottom-color 0.3s ease;
+        }
+        span.admin {
+            color: red;
+            font-weight: bold;
+        }
+        span.user {
+            color: green;
+            font-weight: bold;
+        }
+       
+        select[name="language"] {
+        width: auto;
+        padding: 5px 10px;
+        border: 1px solid #4c64cd;
+        border-radius: 5px;
+        background-color: #4c64cd;
+        color: #333;
+        font-size: 16px;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+    select[name="language"] {
+        padding: 10px 15px;
+        border: 1px solid #4c64cd;
+        border-radius: 5px;
+        background-color: #4c64cd;
+        color: #ffffff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: border-color 0.3s ease;
+    }
+    
+    select[name="language"]:focus {
+        border-color: #ffffff;
+    }
+
+.navbar-nav li.form-inline {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-nav li.form-inline select[name="language"] {
+    margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .navbar-nav li.form-inline {
+        flex-direction: column;
+    }
+    
+    .navbar-nav li.form-inline select[name="language"] {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+h2 {
+    font-family: Arial, sans-serif;
+}
+
+    </style>
+    
+    </style>
+</head>
+
+<body>
+    <section class="header">
+        <div class="header-main bg-light-pink"> 
+            <div class="container">
+                <div class="col-md-auto">
+                    <nav class="navbar navbar-expand-lg navbar-light w-100" id="header-navbar">
+                        <a class="navbar-brand font-weight-bold" href="/index?lang=<%= currentLanguage %>"><%= translation.home %></a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    
+                                    <a class="navbar-brand font-weight" href="/admin?lang=<%= currentLanguage %>"><%= transition.users %></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="navbar-brand font-weight " href="/admin/tours?lang=<%= currentLanguage %>"><%= transition.tours %></a>
+                                </li>
+                                
+                                <li class="nav-item dropdown">
+                                    <form id="language-form" action="/change-language" method="POST">
+                                        <select name="language" onchange="this.form.submit()"> <
+                                            <option value="en" <% if(currentLanguage === 'en') { %> selected <% } %>>En</option>
+                                            <option value="ru" <% if(currentLanguage === 'ru') { %> selected <% } %>>Ru</option>
+                                        </select>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container mt-4">
+        <h2><%= transition.ToursAdministration %></h2>
+        <h3><%= transition.AddTour %></h3>
+        <form action="/admin/tours?lang=<%= currentLanguage %>" method="POST" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input class="form-control" type="text" id="addNameEnglish" name="names[0][language]" value="english" style="display: none;">
+                    <input class="form-control" type="text" id="addNameEnglish" name="names[0][name]" placeholder="<%= transition.TourNameE %>" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" id="addNameRussian" name="names[1][language]" value="russian" style="display: none;">
+                    <input class="form-control" type="text" id="addNameRussian" name="names[1][name]" placeholder="<%= transition.TourNameR %>" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <textarea id="addDescriptionEnglish" name="descriptions[0][language]" style="display: none;"><%= translation.english %></textarea>
+                    <textarea class="form-control" id="addDescriptionEnglish" name="descriptions[0][description]" placeholder="<%= transition.TourDescriptionE %>" required></textarea>
+                </div>
+                <div class="form-group col-md-6">
+                    <textarea id="addDescriptionKazakh" name="descriptions[1][language]" style="display: none;"><%= translation.kazakh %></textarea>
+                    <textarea class="form-control" id="addDescriptionKazakh" name="descriptions[1][description]" placeholder="<%= transition.TourDescriptionR  %>" required></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="number" class="form-control" name="tourPrice" placeholder="<%= transition.TourPrice %>" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="number" class="form-control" name="tourDuration" placeholder="<%= transition.TourDuration %>" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="number" class="form-control" name="tourMaxParticipants" placeholder="<%= transition.TourMaxParticipants %>" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="tourLocation" placeholder="<%= transition.TourLocation %>" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="date" class="form-control" name="tourStartDate" placeholder="<%= transition.TourStartDate %>" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="date" class="form-control" name="tourEndDate" placeholder="<%= transition.TourEndDate %>" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="addImage1"><%= translation.image1 %>:</label>
+                    <input type="file" id="addImage1" name="images[]" accept="image/*" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="addImage2"><%= translation.image2 %>:</label>
+                    <input type="file" id="addImage2" name="images[]" accept="image/*" required>        </div>
+                <div class="form-group col-md-4">
+                    <label for="addImage3"><%= translation.image3 %>:</label>
+                    <input type="file" id="addImage3" name="images[]" accept="image/*" required>        </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block"><%= transition.AddTour %></button>
+        </form>
+        <br><br>
+        <h3><%= transition.UpdateTour %></h3>
+        <form action="/admin/tours/update?lang=<%= currentLanguage %>" method="POST">
+            <div class="form-group">
+                <select class="form-control" name="tourId" required>
+                    <option value="" disabled selected><%= transition.SelectTour %></option>
+                    <% tours.forEach(tour => { %>
+                        <option value="<%= tour._id %>">
+                            <%= (currentLanguage === 'en') ? tour.names[0].name : tour.names[1].name %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <input class="form-control" type="text" id="addNameEnglish" name="names[0][language]" value="english" style="display: none;">
+                    <input class="form-control" type="text" id="addNameEnglish" name="names[0][name]" placeholder="<%= transition.TourNameE %>" >
+                </div>
+                <div class="form-group col-md-6">
+                    <input type="text" id="addNameRussian" name="names[1][language]" value="russian" style="display: none;">
+                    <input class="form-control" type="text" id="addNameRussian" name="names[1][name]" placeholder="<%= transition.TourNameR %>" >
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <textarea id="addDescriptionEnglish" name="descriptions[0][language]" style="display: none;"><%= translation.english %></textarea>
+                    <textarea class="form-control" id="addDescriptionEnglish" name="descriptions[0][description]" placeholder="<%= transition.TourDescriptionE %>" ></textarea>
+                </div>
+                <div class="form-group col-md-6">
+                    <textarea id="addDescriptionKazakh" name="descriptions[1][language]" style="display: none;"><%= translation.kazakh %></textarea>
+                    <textarea class="form-control" id="addDescriptionKazakh" name="descriptions[1][description]" placeholder="<%= transition.TourDescriptionR  %>" ></textarea>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="number" class="form-control" name="tourPrice" placeholder="<%= transition.TourPrice %>" >
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="number" class="form-control" name="tourDuration" placeholder="<%= transition.TourDuration %>" >
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="number" class="form-control" name="tourMaxParticipants" placeholder="<%= transition.TourMaxParticipants %>" >
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <input type="text" class="form-control" name="tourLocation" placeholder="<%= transition.TourLocation %>" >
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="date" class="form-control" name="tourStartDate" placeholder="<%= transition.TourStartDate %>" >
+                </div>
+                <div class="form-group col-md-4">
+                    <input type="date" class="form-control" name="tourEndDate" placeholder="<%= transition.TourEndDate %>" >
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block"><%= transition.UpdateTour %></button>
+        </form>
+
+
+
+        <br><br>
+        <h3><%= transition.DeleteTour %></h3>
+            <form action="/admin/tours/delete?lang=<%= currentLanguage %>" method="POST">
+                <div class="form-group">
+                    <select class="form-control" name="tourId" required>
+                        <option value="" disabled selected><%= transition.SelectTour %></option>
+                        <% tours.forEach(tour => { %>
+                            <option value="<%= tour._id %>">
+                                <%= (currentLanguage === 'en') ? tour.names[0].name : tour.names[1].name %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-danger btn-block"><%= transition.DeleteTour %></button>
+            </form>
+        </div>
+        <footer class="footer">
+            <div class="footer-bottom">
+                <div class="container">
+    
+                    <p class="copyright">
+                        Zhunisbek Zangar / SE-2207
+                    </p>
+                </div>
+            </div>
+        </footer>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

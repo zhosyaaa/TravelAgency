@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourly - Travel agancy</title>
+    <link rel="shortcut icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-..."></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+       .hotel-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; 
+        }
+        
+        
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+        .card {
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+        .hotel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .hotel-card .card-body {
+            padding: 20px; 
+        }
+
+        .hotel-name {
+            font-size: smaller;
+        }
+    </style>
+</head>
+
+<body id="top">
+    <header class="header" data-header>
+        <div class="overlay" data-overlay></div>
+        <div class="header-bottom">
+            <div class="container">
+                <nav class="navbar" data-navbar>
+                    <div class="navbar-top">
+                        <button class="nav-close-btn" aria-label="Close Menu" data-nav-close-btn>
+                            <ion-icon name="close-outline"></ion-icon>
+                        </button>
+                    </div>
+                    <ul class="navbar-list">
+                        <li>
+                            <a href="/index?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.home %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/tours?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.allTours %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/myTours?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.myTours %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/news?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.firstapi %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/airports?lang=<%= currentLanguage %>" class="navbar-link" data-nav-link>
+                                <%= translation.secondapi %>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/logout" class="navbar-link" data-nav-link>
+                                <%= translation.logout %>
+                            </a>
+                        </li>
+                        <% if (isAdmin) { %>
+                            <li>
+                                <a class="navbar-link" href="/admin?lang=<%= currentLanguage %>">
+                                    <%= translation.isAdmin %>
+                                </a>
+                            </li>
+                            <% } %>
+                    </ul>
+                </nav>
+                <form id="language-form" action="/change-language" method="POST" class="btn-group">
+                    <select name="language" onchange="document.getElementById('language-form').submit()"
+                        class="btn btn-primary dropdown-toggle">
+                        <option value="en" <% if(currentLanguage==='en' ) { %> selected <% } %>>En</option>
+                        <option value="ru" <% if(currentLanguage==='ru' ) { %> selected <% } %>>Ru</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+    </header>
+    <main>
+        <article>
+            <section class="hero" id="home">
+                <div class="container">
+                    <h2 class="h1 hero-title">
+                        <%= translation.hotelWelcome %>
+                    </h2>
+                    <p class="hero-text">
+                        <%= translation.hotelDescription %>
+                    </p>
+                </div>
+            </section>
+            
+            <div class="container text-center">
+                <form action="/news" method="POST">
+                    <div class="form-group">
+                        <label for="keyword">Keyword or Phrase:</label>
+                        <input type="text" id="keyword" name="keyword" required>
+                        
+                        <label for="date">Date Published:</label>
+                        <input type="date" id="date" name="date">
+                       
+                        <label for="country">Country:</label>
+                        <select id="country" name="country">
+                            <option value="">Select Country</option>
+                            <option value="us">United States</option>
+                            <option value="gb">United Kingdom</option>
+                            <option value="ca">Canada</option>
+                            <option value="ru">Russian</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary"><%= translation.search %></button>
+                </form>
+                
+            </div>
+            <section>
+                <div class="container mt-4 card">
+                    <div id="newsContainer">
+                        <% articles.forEach(function(article) { %>
+                            <div class="card mb-3">
+                                <div class="row g-0">
+                                    <div class="col-md-4">
+                                        <img src="<%= article.urlToImage %>" class="img-fluid rounded-start" alt="<%= article.title %>">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><%= article.title %></h5>
+                                            <p class="card-text"><%= article.description %></p>
+                                            <p class="card-text"><small class="text-muted">Published At: <%= article.publishedAt %></small></p>
+                                            <a href="<%= article.url %>" class="btn btn-primary">Read More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+
+                </div>
+            </section>      
+        </section>
+        
+        </article>
+    </main>
+    <footer class="footer">
+        <div class="footer-bottom">
+            <div class="container">
+
+                <p class="copyright">
+                    Zhunisbek Zangar / SE-2207
+                </p>
+            </div>
+        </div>
+    </footer>
+
+  
+    <a href="#top" class="go-top" data-go-top>
+        <ion-icon name="chevron-up-outline"></ion-icon>
+    </a>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="./assets/js/script.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+</body>
+
+</html>
